@@ -1620,6 +1620,10 @@
     const backSmall = document.getElementById("back-small");
     let previewDay = false;
 
+    // Test link: add ?preview to the address to see the birthday version early.
+    // Nothing is saved, so the real visit still gets the candles.
+    if (new URLSearchParams(location.search).has("preview")) previewDay = true;
+
     const pad = n => String(n).padStart(2, "0");
 
     function tick() {
