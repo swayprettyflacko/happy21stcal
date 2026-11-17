@@ -430,6 +430,88 @@
     }
 
     .letter-content.show { animation: rise .7s ease; }
+
+    /* ---------- Subscribe paywall on the letter ---------- */
+
+    .paywall { display: none; }
+    .letter-content.paywalled .letter-body {
+      max-height: 12.5em;
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(#000 35%, transparent);
+      mask-image: linear-gradient(#000 35%, transparent);
+      user-select: none;
+    }
+    .letter-content.paywalled .signature,
+    .letter-content.paywalled .signature-role { display: none; }
+    .letter-content.paywalled .paywall {
+      display: block;
+      margin-top: -8px;
+      padding: 22px 18px 18px;
+      border-top: 3px solid var(--lacquer);
+      background: var(--paper);
+      box-shadow: 0 -18px 30px rgba(255, 255, 255, .9);
+      text-align: center;
+    }
+    .paywall-kicker {
+      margin: 0;
+      font-stretch: 80%;
+      font-weight: 700;
+      font-size: .8rem;
+      color: var(--lacquer);
+    }
+    .paywall-title {
+      margin: 6px 0 0;
+      font-family: var(--serif);
+      font-size: 1.65rem;
+      line-height: 1.15;
+    }
+    .paywall-sub {
+      margin: 8px 0 18px;
+      color: var(--grey);
+      font-size: .95rem;
+    }
+    .paywall-form {
+      display: flex;
+      gap: 8px;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+    .paywall-form input {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid var(--black);
+      border-radius: 0;
+      padding: 12px 12px;
+      font: inherit;
+      font-size: 16px;
+      background: var(--paper);
+      color: var(--black);
+    }
+    .paywall-form button {
+      border: 0;
+      background: var(--black);
+      color: var(--paper);
+      font-weight: 700;
+      padding: 0 16px;
+    }
+    .paywall-form.wrong { animation: shake .45s ease; }
+    @keyframes shake {
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    .paywall-msg {
+      min-height: 1.4em;
+      margin: 12px 0 0;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--lacquer);
+    }
+    .paywall-fine {
+      margin: 6px 0 0;
+      font-size: .75rem;
+      color: var(--grey);
+    }
     @keyframes rise {
       from { opacity: 0; transform: translateY(18px); }
       to   { opacity: 1; transform: none; }
@@ -2058,6 +2140,20 @@
     <!-- The letter itself -->
     <div class="letter-content" id="letter-content" hidden>
       <div class="letter-body" id="letter-body"></div>
+
+      <!-- Subscribe to keep reading: only her names work -->
+      <div class="paywall" id="paywall">
+        <p class="paywall-kicker">Subscribers only</p>
+        <p class="paywall-title">This letter is for one reader.</p>
+        <p class="paywall-sub">Enter your name to subscribe to The Calista Issue and keep reading.</p>
+        <form class="paywall-form" id="paywall-form" novalidate>
+          <input id="paywall-name" type="text" autocomplete="given-name" autocapitalize="words" placeholder="Your name" aria-label="Your name">
+          <button type="submit">Subscribe</button>
+        </form>
+        <p class="paywall-msg" id="paywall-msg" aria-live="polite"></p>
+        <p class="paywall-fine">Free for one reader. No spam, just one letter.</p>
+      </div>
+
       <p class="signature" id="signature"></p>
       <p class="signature-role">Editor in chief, and your biggest fan</p>
     </div>
@@ -2699,9 +2795,53 @@
       letterContent.hidden = state !== "open";
     }
 
+    // ---------- Subscribe to read: only her names unlock the letter ----------
+    const herNames = ["calista", "cali", "cal", "lisa", "angel"];
+    function isSubscribed() {
+      if (previewDay) return false;
+      try { return localStorage.getItem("cali-subscribed") === "1"; } catch (e) { return false; }
+    }
+    function applyPaywall() {
+      if (isSubscribed()) {
+        letterContent.classList.remove("paywalled");
+      } else {
+        letterContent.classList.add("paywalled");
+      }
+    }
+
+    const paywallForm = document.getElementById("paywall-form");
+    const paywallMsg = document.getElementById("paywall-msg");
+    paywallForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const typed = document.getElementById("paywall-name").value
+        .toLowerCase().replace(/[^a-z\s]/g, "").trim().split(/\s+/)[0] || "";
+
+      if (!herNames.includes(typed)) {
+        paywallMsg.textContent = "Sorry, this letter isn't addressed to you.";
+        paywallForm.classList.remove("wrong");
+        void paywallForm.offsetWidth;  // restart the shake
+        paywallForm.classList.add("wrong");
+        return;
+      }
+
+      paywallMsg.textContent = "Welcome, subscriber No. 1.";
+      document.activeElement.blur();
+      if (!previewDay) {
+        try { localStorage.setItem("cali-subscribed", "1"); } catch (err) {}
+      }
+      setTimeout(() => {
+        letterContent.classList.remove("paywalled", "show");
+        void letterContent.offsetWidth;  // replay the letter writing itself in
+        letterContent.classList.add("show");
+        letterContent.scrollIntoView({ behavior: "smooth", block: "start" });
+        burstConfetti();
+      }, 900);
+    });
+
     function openLetter(scroll) {
       setLetterState("open");
-      letterContent.classList.add("show");
+      applyPaywall();
+      if (!letterContent.classList.contains("paywalled")) letterContent.classList.add("show");
       if (!previewDay) rememberOpened();
       if (scroll) goToSection("letter", () => letterContent.scrollIntoView({ behavior: "smooth", block: "start" }));
     }
@@ -2788,6 +2928,7 @@
       if (letterState === null || letterState === "locked") {
         if (alreadyOpened() && !previewDay) {
           setLetterState("open");
+          applyPaywall();
         } else {
           setLetterState("wish");
           showPopup();
