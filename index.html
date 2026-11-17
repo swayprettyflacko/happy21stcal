@@ -1528,7 +1528,7 @@
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
       box-shadow: 0 0 40px rgba(0, 0, 0, .35);
-      padding-bottom: calc(86px + env(safe-area-inset-bottom));
+      padding-bottom: calc(40px + env(safe-area-inset-bottom));
     }
     .book > .page { background: var(--paper); padding-top: calc(48px + env(safe-area-inset-top)); }
     .book > .universe,
@@ -1999,7 +1999,7 @@
     }
     .ad-copy {
       flex: 0 0 auto;
-      padding: 18px 22px calc(88px + env(safe-area-inset-bottom));
+      padding: 18px 22px calc(40px + env(safe-area-inset-bottom));
       color: var(--lacquer-deep);
       text-align: center;
     }
@@ -2057,6 +2057,80 @@
     .back-barcode { display: block; width: 130px; height: 34px; margin: 0 auto; background: var(--paper); padding: 4px 6px; }
 
     .pg-sound { font-size: 1.05rem; }
+
+    /* No page bar: just the sound button in the corner */
+    .pager {
+      left: 14px;
+      right: auto;
+      transform: none;
+      padding: 3px;
+    }
+    #pg-prev, #pg-next, .pg-label { display: none; }
+
+    /* One-time hint on the cover, gone after the first page turn */
+    /* Dog-ear: a folded corner you can tap to turn the page */
+    .dog-ear {
+      position: fixed;
+      right: max(0px, calc(50% - 280px));
+      bottom: 0;
+      z-index: 60;
+      width: 58px;
+      height: 58px;
+      padding: 0;
+      border: 0;
+      background: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .dog-ear span {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: var(--ear, 34px);
+      height: var(--ear, 34px);
+      transition: width .35s cubic-bezier(.2, .8, .2, 1), height .35s cubic-bezier(.2, .8, .2, 1);
+    }
+    /* what's revealed under the fold */
+    .ear-under {
+      background: #1B1A19;
+      clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    }
+    /* the folded-over corner, showing the back of the paper */
+    .ear-flap {
+      background: linear-gradient(135deg, #FFFFFF 0%, #EFEAE1 55%, #D4CCBF 100%);
+      clip-path: polygon(0 0, 100% 0, 0 100%);
+      filter: drop-shadow(-3px -3px 4px rgba(0, 0, 0, .25));
+    }
+    .dog-ear:hover span, .dog-ear:active span { --ear: 50px; }
+    .dog-ear.hide { display: none; }
+    @media (prefers-reduced-motion: no-preference) {
+      .dog-ear span { animation: ear-lift 3.6s ease-in-out 2s infinite; }
+      @keyframes ear-lift {
+        0%, 70%, 100% { width: var(--ear, 34px); height: var(--ear, 34px); }
+        80% { width: 48px; height: 48px; }
+        90% { width: 38px; height: 38px; }
+      }
+    }
+
+    .open-hint {
+      position: fixed;
+      left: 50%;
+      bottom: calc(22px + env(safe-area-inset-bottom));
+      z-index: 60;
+      transform: translateX(-50%);
+      padding: 9px 16px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, .7);
+      color: var(--paper);
+      font-stretch: 85%;
+      font-weight: 700;
+      font-size: .85rem;
+      white-space: nowrap;
+      pointer-events: none;
+      transition: opacity .4s ease;
+    }
+    .open-hint span { display: inline-block; animation: nudge-left 1.2s ease-in-out infinite; }
+    @keyframes nudge-left { 50% { transform: translateX(-6px); } }
+    .open-hint.gone { opacity: 0; }
     .pg-sound[aria-pressed="false"] { opacity: .4; text-decoration: line-through; }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -2715,6 +2789,7 @@
     <button class="pg-btn" id="pg-next" aria-label="Next page">&rsaquo;</button>
     <button class="pg-btn pg-sound" id="pg-sound" aria-label="Page sounds on" aria-pressed="true">&#9835;</button>
   </nav>
+  <button class="dog-ear" id="dog-ear" aria-label="Turn the page"><span class="ear-under"></span><span class="ear-flap"></span></button>
   <div class="swipe-hint" id="swipe-hint" aria-hidden="true">Swipe to turn the page <span>&rarr;</span></div>
 
   <!-- Only for the mockup: switches between the countdown and the birthday cover -->
@@ -3928,6 +4003,7 @@
       pgPrev.disabled = current === 0;
       pgNext.disabled = current === leaves.length - 1;
       pgNext.classList.toggle("nudge", current === 0);
+      document.getElementById("dog-ear").classList.toggle("hide", current === leaves.length - 1);
       edges.style.width = Math.min(8, (leaves.length - 1 - current) * .6) + "px";
       setShade(100, false, 0);
     }
@@ -3978,6 +4054,7 @@
     }
 
     pgPrev.addEventListener("click", () => turn(-1));
+    document.getElementById("dog-ear").addEventListener("click", () => turn(1));
     pgNext.addEventListener("click", () => turn(1));
     document.addEventListener("keydown", e => {
       if (document.documentElement.classList.contains("locked")) return;
