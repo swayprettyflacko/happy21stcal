@@ -1957,8 +1957,7 @@
       </div>
       <p class="wish-hint" id="pop-hint" aria-live="polite">Tap the flames to blow them out</p>
       <div class="pop-actions" id="pop-actions" hidden>
-        <button class="pop-btn" id="pop-read">Read your letter</button>
-        <button class="pop-link" id="pop-close">Open the issue</button>
+        <button class="pop-btn" id="pop-read">Read the issue</button>
       </div>
     </div>
   </div>
@@ -2769,9 +2768,8 @@
 
     document.getElementById("pop-read").addEventListener("click", () => {
       closePopup();
-      goToSection("letter", () => letterContent.scrollIntoView({ behavior: "smooth", block: "start" }));
+      goTo(0);
     });
-    document.getElementById("pop-close").addEventListener("click", closePopup);
     popLater.addEventListener("click", closePopup);
     document.addEventListener("keydown", e => {
       if (e.key === "Escape" && !popup.hidden) closePopup();
