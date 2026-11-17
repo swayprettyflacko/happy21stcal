@@ -14,6 +14,14 @@
   <link rel="apple-touch-icon" href="icon.png">
   <link rel="manifest" href="manifest.webmanifest">
 
+  <script>
+    // Keep the whole issue locked until midnight Nov 18 in India (IST).
+    // The countdown below unlocks it live; ?preview skips the lock for testing.
+    if (Date.now() < Date.parse("2026-11-18T00:00:00+05:30") && !/[?&]preview/.test(location.search)) {
+      document.documentElement.classList.add("locked");
+    }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..700&family=Archivo:wdth,wght@62..125,400..800&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
@@ -206,6 +214,65 @@
     }
 
     [hidden] { display: none !important; }
+
+    /* ---------- Locked gate (before her birthday) ---------- */
+
+    .gate { display: none; }
+    html.locked body > *:not(.gate) { display: none !important; }
+    html.locked .gate {
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: calc(20px + env(safe-area-inset-top)) 18px calc(28px + env(safe-area-inset-bottom));
+      background: var(--lacquer);
+      color: var(--paper);
+      text-align: center;
+    }
+    .gate-inner { width: 100%; max-width: 520px; }
+    .gate-meta {
+      display: flex;
+      justify-content: space-between;
+      margin: 0;
+      font-stretch: 80%;
+      font-weight: 600;
+      font-size: .8rem;
+    }
+    .gate-mast {
+      font-family: var(--serif);
+      font-weight: 800;
+      font-size: min(38vw, 220px);
+      line-height: .8;
+      letter-spacing: -.045em;
+      margin: 18px 0 10px;
+    }
+    .gate-issue {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.6rem;
+      margin: 0;
+    }
+    .gate-label {
+      margin: 34px 0 0;
+      font-stretch: 80%;
+      font-weight: 600;
+      font-size: .92rem;
+      color: var(--blush);
+    }
+    .gate-time {
+      margin: 10px 0 0;
+      font-family: var(--serif);
+      font-weight: 700;
+      font-size: clamp(2.2rem, 11vw, 3.4rem);
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+    .gate-note {
+      margin: 22px 0 0;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--blush);
+    }
 
     /* ---------- Sealed letter ---------- */
 
@@ -1373,6 +1440,18 @@
 </head>
 <body>
 
+  <!-- Locked cover: the only thing showing until midnight in India -->
+  <div class="gate" id="gate">
+    <div class="gate-inner">
+      <p class="gate-meta"><span>No. 21</span><span>November 2026</span></p>
+      <div class="gate-mast">CALI</div>
+      <p class="gate-issue">The Twenty-One Issue</p>
+      <p class="gate-label">On newsstands at midnight, November 18, India time</p>
+      <p class="gate-time" id="gate-time" aria-live="off"></p>
+      <p class="gate-note">Come back at midnight.</p>
+    </div>
+  </div>
+
   <canvas id="confetti" aria-hidden="true"></canvas>
 
   <!-- Tip: save the site to the home screen so it opens like an app -->
@@ -2046,8 +2125,20 @@
 
     const pad = n => String(n).padStart(2, "0");
 
+    const gateTime = document.getElementById("gate-time");
+
     function tick() {
       const diff = target - new Date();
+
+      // Gate: locked until midnight IST, then the issue opens on its own
+      const open = diff <= 0 || previewDay;
+      document.documentElement.classList.toggle("locked", !open);
+      if (!open) {
+        const t = Math.floor(diff / 1000);
+        const d = Math.floor(t / 86400);
+        const hms = `${pad(Math.floor(t % 86400 / 3600))}:${pad(Math.floor(t % 3600 / 60))}:${pad(t % 60)}`;
+        gateTime.textContent = d ? `${d}d ${hms}` : hms;
+      }
       updateLetter(diff <= 0 || previewDay, diff);
 
       if (diff <= 0 || previewDay) {
@@ -2801,7 +2892,7 @@
 
       // Wait a few seconds, and never on top of the birthday pop-up
       setTimeout(function showWhenFree() {
-        if (!document.getElementById("bday-pop").hidden) {
+        if (!document.getElementById("bday-pop").hidden || document.documentElement.classList.contains("locked")) {
           setTimeout(showWhenFree, 2000);
           return;
         }
