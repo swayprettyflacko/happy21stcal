@@ -1807,8 +1807,28 @@
         to   { transform: none; opacity: 1; filter: none; }
       }
       .masthead span { display: inline-block; }
-      .leaf.arrived .cover-photo img { animation: settle 2.4s cubic-bezier(.2, .7, .2, 1) both; }
-      @keyframes settle { from { transform: scale(1.12); } to { transform: scale(1); } }
+      /* Cover: the issue prints itself in */
+      .leaf.arrived .cover-meta { animation: fade-in .8s ease .1s both; }
+      @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+      .leaf.arrived .cover-photo img { animation: print-in 2.6s cubic-bezier(.2, .7, .2, 1) .3s both; }
+      @keyframes print-in {
+        from { transform: scale(1.14); filter: grayscale(1) blur(8px) brightness(1.3); }
+        45%  { filter: grayscale(.6) blur(2px) brightness(1.1); }
+        to   { transform: scale(1); filter: contrast(1.05) saturate(.9); }
+      }
+      .leaf.arrived .coverlines li { animation: line-in .8s cubic-bezier(.2, .8, .2, 1) both; }
+      .leaf.arrived .coverlines li:nth-child(1) { animation-delay: 1.2s; }
+      .leaf.arrived .coverlines li:nth-child(2) { animation-delay: 1.4s; }
+      .leaf.arrived .coverlines li:nth-child(3) { animation-delay: 1.6s; }
+      @keyframes line-in {
+        from { transform: translateX(-30px); opacity: 0; }
+        to   { transform: none; opacity: 1; }
+      }
+      .leaf.arrived .onsale { animation: sticker .7s cubic-bezier(.2, 1.5, .4, 1) 1.9s both; }
+      @keyframes sticker {
+        from { transform: scale(.6) rotate(-8deg); opacity: 0; }
+        to   { transform: none; opacity: 1; }
+      }
 
       .leaf .menu li, .leaf .list21 li {
         opacity: 0;
@@ -1927,7 +1947,7 @@
         box-shadow: 0 0 8px 2px rgba(122, 12, 22, .55);
         opacity: 0;
       }
-      .leaf.arrived .scan { animation: scan 1.3s ease-in-out 1.6s both; }
+      .leaf.arrived .scan { animation: scan 1.3s ease-in-out 2.6s both; }
       @keyframes scan {
         0%   { left: 0; opacity: 0; }
         12%  { opacity: 1; }
@@ -3025,6 +3045,12 @@
     function closePopup() {
       popup.hidden = true;
       document.documentElement.style.overflow = "";
+      // the cover's entrance played behind the pop-up, so play it again now that she can see it
+      if (current === 0) {
+        leaves[0].classList.remove("arrived");
+        void leaves[0].offsetWidth;
+        leaves[0].classList.add("arrived");
+      }
     }
 
     document.getElementById("pop-read").addEventListener("click", () => {
