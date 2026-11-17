@@ -533,6 +533,272 @@
       margin: 0 0 24px;
     }
 
+    /* ---------- The Style File ---------- */
+
+    .look-file { margin: 0 0 34px; }
+    .look-frame {
+      position: relative;
+      aspect-ratio: 3 / 4;
+    }
+    .look-frame .photo { position: absolute; inset: 0; }
+    .look-file figcaption {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 8px;
+      font-size: .9rem;
+      color: var(--grey);
+    }
+    .look-file figcaption b {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--black);
+    }
+
+    .spot {
+      position: absolute;
+      z-index: 2;
+      width: 30px;
+      height: 30px;
+      margin: -15px 0 0 -15px;
+      border-radius: 50%;
+      border: 2px solid var(--lacquer);
+      background: var(--paper);
+      color: var(--lacquer);
+      font-weight: 800;
+      font-size: 1.1rem;
+      line-height: 1;
+      padding: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .35);
+      transition: transform .2s;
+    }
+    .spot::after {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, .8);
+      animation: ping 2.2s ease-out infinite;
+    }
+    @keyframes ping {
+      0%   { transform: scale(.7); opacity: 1; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+    .spot[aria-expanded="true"] {
+      transform: rotate(45deg);
+      background: var(--lacquer);
+      color: var(--paper);
+    }
+    .spot[aria-expanded="true"]::after { animation: none; opacity: 0; }
+
+    .spot-label {
+      position: absolute;
+      z-index: 3;
+      width: max-content;
+      padding: 7px 11px;
+      background: var(--black);
+      color: var(--paper);
+      font-stretch: 85%;
+      font-weight: 600;
+      font-size: .88rem;
+      line-height: 1.3;
+      transform: translate(22px, -50%);
+      pointer-events: none;
+      animation: label-in .25s ease;
+    }
+    .spot-label.flip { transform: translate(-22px, -50%); }
+    @keyframes label-in { from { opacity: 0; } to { opacity: 1; } }
+
+    /* ---------- Passport ---------- */
+
+    .passport-page {
+      position: relative;
+      margin-top: 8px;
+      padding: 20px 18px 16px;
+      background-color: #F6EFE6;
+      /* fine security-paper pattern */
+      background-image:
+        repeating-radial-gradient(circle at 20% 30%, transparent 0 9px, rgba(122, 12, 22, .06) 9px 10px),
+        repeating-radial-gradient(circle at 85% 75%, transparent 0 13px, rgba(30, 60, 110, .06) 13px 14px);
+      border: 1px solid #D9CBB8;
+      overflow: hidden;
+    }
+    .passport-head {
+      display: flex;
+      justify-content: space-between;
+      font-stretch: 80%;
+      font-weight: 700;
+      font-size: .78rem;
+      color: var(--lacquer);
+    }
+    .passport-data {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 6px 14px;
+      margin: 14px 0 6px;
+      font-size: .92rem;
+    }
+    .passport-data dt { color: var(--grey); font-stretch: 80%; font-weight: 600; }
+    .passport-data dd { margin: 0; font-family: var(--serif); font-weight: 600; font-size: 1.05rem; }
+
+    .route { display: block; width: 100%; height: auto; margin: 10px 0 4px; }
+    .route .path-line {
+      fill: none;
+      stroke: var(--lacquer);
+      stroke-width: 2;
+      stroke-dasharray: 5 6;
+    }
+    .route .city { fill: var(--lacquer); }
+    .route .city.next { fill: none; stroke: var(--lacquer); stroke-width: 2; }
+    .route text {
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: 13px;
+      fill: var(--black);
+    }
+    .route .plane { fill: var(--black); }
+
+    .stamps {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 10px;
+    }
+    .stamp {
+      border: 3px double currentColor;
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-align: center;
+      font-stretch: 80%;
+      font-weight: 700;
+      line-height: 1.15;
+      opacity: .88;
+    }
+    .stamp b {
+      display: block;
+      font-family: var(--serif);
+      font-stretch: normal;
+      font-size: 1.5rem;
+      letter-spacing: .04em;
+    }
+    .stamp small { display: block; font-size: .75rem; font-weight: 600; }
+    .stamp.udupi  { color: #8A5A1F; transform: rotate(4deg); border-radius: 50% / 40%; }
+    .stamp.dubai  { color: #7A0C16; transform: rotate(-6deg); }
+    .stamp.pune   { color: #1F4E8C; transform: rotate(-3deg); }
+    .stamp.london {
+      color: #2F6B4F;
+      border-style: dashed;
+      transform: rotate(5deg);
+    }
+    .mrz {
+      margin: 16px 0 0;
+      font-family: ui-monospace, "Courier New", monospace;
+      font-size: .7rem;
+      letter-spacing: .08em;
+      line-height: 1.5;
+      color: #4A4036;
+      word-break: break-all;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .passport-page .stamp { opacity: 0; }
+      .passport-page.stamped .stamp { animation: stamp-down .45s cubic-bezier(.3, 1.6, .5, 1) both; }
+      .passport-page.stamped .stamp.dubai { animation-delay: .45s; }
+      .passport-page.stamped .stamp.pune { animation-delay: .9s; }
+      .passport-page.stamped .stamp.london { animation-delay: 1.35s; }
+      .route .path-line { stroke-dashoffset: 400; }
+      .passport-page.stamped .route .path-line { animation: fly-line 2.4s ease-in-out .2s forwards; }
+    }
+    @keyframes stamp-down {
+      from { opacity: 0; scale: 1.6; }
+      to   { opacity: .88; scale: 1; }
+    }
+    @keyframes fly-line { to { stroke-dashoffset: 0; } }
+
+    /* ---------- The 21 List ---------- */
+
+    .list21 {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .list21 li {
+      display: grid;
+      grid-template-columns: 3.1rem 1fr;
+      gap: 10px;
+      align-items: baseline;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--serif);
+      font-size: 1.12rem;
+      line-height: 1.35;
+    }
+    .list21 li:first-child { border-top: 1px solid var(--black); }
+    .list21 .no {
+      font-weight: 800;
+      font-size: 1.7rem;
+      line-height: 1;
+      color: var(--lacquer);
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    .list21 li:last-child { border-bottom: 0; }
+    .list21 li:last-child .no { font-size: 2.4rem; }
+
+    /* ---------- Horoscope ---------- */
+
+    .horoscope {
+      border: 1px solid var(--black);
+      padding: 22px 18px 18px;
+      position: relative;
+    }
+    .zodiac {
+      float: right;
+      margin: -6px 0 6px 12px;
+      font-family: var(--serif);
+      font-size: 4.6rem;
+      line-height: 1;
+      color: var(--lacquer);
+    }
+    .horoscope-intro {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.2rem;
+      line-height: 1.4;
+      margin: 0 0 16px;
+    }
+    .forecast { margin: 0; }
+    .forecast dt {
+      font-stretch: 80%;
+      font-weight: 700;
+      font-size: .85rem;
+      color: var(--lacquer);
+      margin-top: 14px;
+    }
+    .forecast dd {
+      margin: 2px 0 0;
+      font-family: var(--serif);
+      font-size: 1.08rem;
+      line-height: 1.45;
+    }
+    .lucky {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 20px;
+      padding-top: 14px;
+      border-top: 1px solid var(--rule);
+      text-align: center;
+    }
+    .lucky span { display: block; font-stretch: 80%; font-weight: 600; font-size: .75rem; color: var(--grey); }
+    .lucky b { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; }
+    .fine-print {
+      margin: 16px 0 0;
+      font-size: .78rem;
+      color: var(--grey);
+      clear: both;
+    }
+
     /* ---------- Faith page ---------- */
 
     .faith {
@@ -1176,12 +1442,16 @@
     <ul class="contents-list">
       <li><a href="#letter"><span class="pg">04</span><span><strong>Editor's letter</strong><span class="desc">Sealed until your birthday.</span></span></a></li>
       <li><a href="#cover-story"><span class="pg">06</span><span><strong>Cover story</strong><span class="desc">Styled by herself.</span></span></a></li>
+      <li><a href="#style-file"><span class="pg">07</span><span><strong>The Style File</strong><span class="desc">Every look, broken down.</span></span></a></li>
       <li><a href="#collections"><span class="pg">08</span><span><strong>The collections</strong><span class="desc">From ninth grade to now.</span></span></a></li>
       <li><a href="#universe"><span class="pg">12</span><span><strong>Our universe</strong><span class="desc">Tap a planet.</span></span></a></li>
+      <li><a href="#passport"><span class="pg">13</span><span><strong>Passport</strong><span class="desc">Udupi to London, one stamp at a time.</span></span></a></li>
       <li><a href="#tape"><span class="pg">14</span><span><strong>Archive footage</strong><span class="desc">The first date, on tape.</span></span></a></li>
       <li><a href="#scrapbook"><span class="pg">15</span><span><strong>Scrapbook</strong><span class="desc">Volume two. Can't throw this one away.</span></span></a></li>
       <li><a href="#off-duty"><span class="pg">16</span><span><strong>Off duty</strong><span class="desc">Where the muse eats.</span></span></a></li>
+      <li><a href="#list21"><span class="pg">17</span><span><strong>The 21 List</strong><span class="desc">One for every year.</span></span></a></li>
       <li><a href="#soundtrack"><span class="pg">18</span><span><strong>The soundtrack</strong><span class="desc">The songs that are ours, era by era.</span></span></a></li>
+      <li><a href="#horoscope"><span class="pg">19</span><span><strong>Horoscope</strong><span class="desc">Scorpio, at 21.</span></span></a></li>
       <li><a href="#faith"><span class="pg">20</span><span><strong>Faith</strong><span class="desc">Created anew.</span></span></a></li>
       <li><a href="#pass"><span class="pg">21</span><span><strong>Backstage</strong><span class="desc">Your pass is inside. Flip it.</span></span></a></li>
     </ul>
@@ -1233,6 +1503,14 @@
     <div class="story" id="story"></div>
   </section>
 
+  <!-- Style File -->
+  <section class="page" id="style-file" aria-labelledby="style-title">
+    <div class="folio"><span>The Style File</span><span>07</span></div>
+    <h2 id="style-title">The Style File</h2>
+    <p class="dek">Tap the dots. Every look, broken down.</p>
+    <div id="style-looks"></div>
+  </section>
+
   <!-- Collections -->
   <section class="page" id="collections" aria-labelledby="collections-title">
     <div class="folio"><span>The collections</span><span>08</span></div>
@@ -1251,6 +1529,48 @@
     <div class="space" id="space">
       <canvas id="space-canvas" role="img" aria-label="Three swirling planets in space. Tapping one reveals a photo of us."></canvas>
       <div class="space-hint" id="space-hint">Tap a planet</div>
+    </div>
+  </section>
+
+  <!-- Passport -->
+  <section class="page" id="passport" aria-labelledby="passport-title">
+    <div class="folio"><span>Passport</span><span>13</span></div>
+    <h2 id="passport-title">Passport</h2>
+    <p class="dek">Every stamp so far, and the next one.</p>
+
+    <div class="passport-page" id="passport-page">
+      <div class="passport-head"><span>Travel record</span><span>No. 21</span></div>
+      <dl class="passport-data">
+        <dt>Name</dt><dd>Calista</dd>
+        <dt>Also known as</dt><dd>Cali, Lisa</dd>
+        <dt>Date of birth</dt><dd>18 Nov 2005</dd>
+      </dl>
+
+      <svg class="route" viewBox="0 0 320 130" role="img" aria-label="A flight path from Udupi to Dubai to Pune to London">
+        <path class="path-line" id="route-line" d="M262 112 C 210 128, 120 120, 72 88 C 120 64, 190 52, 236 66 C 220 30, 170 14, 112 22"/>
+        <circle class="city" cx="262" cy="112" r="6"/>
+        <circle class="city" cx="72" cy="88" r="6"/>
+        <circle class="city" cx="236" cy="66" r="6"/>
+        <circle class="city next" cx="112" cy="22" r="7"/>
+        <text x="270" y="108">Udupi</text>
+        <text x="30" y="108">Dubai</text>
+        <text x="246" y="70">Pune</text>
+        <text x="50" y="18">London</text>
+        <path class="plane" d="M0 -5 L4 0 L0 5 L1 0 Z" transform="scale(2)">
+          <animateMotion dur="6s" repeatCount="indefinite" rotate="auto" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+            <mpath href="#route-line"/>
+          </animateMotion>
+        </path>
+      </svg>
+
+      <div class="stamps">
+        <div class="stamp udupi"><small>Origin</small><b>UDUPI</b><small>Where it started</small></div>
+        <div class="stamp dubai"><small>Arrived</small><b>DUBAI</b><small>The school years</small></div>
+        <div class="stamp pune"><small>Arrived</small><b>PUNE</b><small>Right now</small></div>
+        <div class="stamp london"><small>Next stop</small><b>LONDON</b><small>For the master's</small></div>
+      </div>
+
+      <p class="mrz" aria-hidden="true">P&lt;CALISTA&lt;&lt;THE&lt;TWENTY&lt;ONE&lt;ISSUE&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br>0511180&lt;UDUPI&lt;DUBAI&lt;PUNE&lt;LONDON&lt;&lt;21</p>
     </div>
   </section>
 
@@ -1350,12 +1670,34 @@
     <div class="duty" id="duty"></div>
   </section>
 
+  <!-- The 21 List -->
+  <section class="page" id="list21" aria-labelledby="list-title">
+    <div class="folio"><span>The 21 List</span><span>17</span></div>
+    <h2 id="list-title">The 21 List</h2>
+    <p class="dek">Twenty-one things about Calista, one for every year.</p>
+    <ol class="list21" id="list21-items"></ol>
+  </section>
+
   <!-- Soundtrack -->
   <section class="page" id="soundtrack" aria-labelledby="soundtrack-title">
     <div class="folio"><span>The soundtrack</span><span>18</span></div>
     <h2 id="soundtrack-title">Music for the show</h2>
     <p class="dek">Tap any track to play it.</p>
     <ol class="tracks" id="tracks"></ol>
+  </section>
+
+  <!-- Horoscope -->
+  <section class="page" id="horoscope" aria-labelledby="horo-title">
+    <div class="folio"><span>Horoscope</span><span>19</span></div>
+    <h2 id="horo-title">Scorpio, at 21</h2>
+    <p class="dek">October 23 to November 21</p>
+    <div class="horoscope">
+      <div class="zodiac" aria-hidden="true">&#9807;&#xFE0E;</div>
+      <p class="horoscope-intro" id="horo-intro"></p>
+      <dl class="forecast" id="horo-forecast"></dl>
+      <div class="lucky" id="horo-lucky"></div>
+      <p class="fine-print">Written by an editor with zero astrology credentials.</p>
+    </div>
   </section>
 
   <!-- Faith -->
@@ -1527,6 +1869,84 @@
         video: "photos/first-date.mp4",
         poster: "photos/first-date-poster.jpg",
         caption: "Ice skating. Slowed down so it lasts a little longer."
+      },
+
+      // Style File: each look with tap-to-see labels. x, y are where the dot sits (% of the photo).
+      styleFile: [
+        {
+          src: "photos/black-dress-2.jpg",
+          title: "Look 1",
+          name: "The little black dress",
+          spots: [
+            { x: 47, y: 13, label: "Lace cat ears. Committed to the bit." },
+            { x: 45, y: 41, label: "Square-neck long-sleeve mini, in black." },
+            { x: 45, y: 86, label: "Sheer black tights." },
+            { x: 79, y: 27, label: "The mirror stickers. See page 20." }
+          ]
+        },
+        {
+          src: "photos/flower.jpg",
+          title: "Look 2",
+          name: "The rose",
+          spots: [
+            { x: 91, y: 34, label: "A red rose, tucked behind the ear." },
+            { x: 84, y: 57, label: "Gold statement hoops." },
+            { x: 88, y: 46, label: "Full ear stack." },
+            { x: 62, y: 53, label: "Glossy lip. Always." },
+            { x: 9, y: 64, label: "Almond nails, mauve." }
+          ]
+        },
+        {
+          src: "photos/cover.jpg",
+          title: "Look 3",
+          name: "The cover gown",
+          spots: [
+            { x: 49, y: 43, label: "Loose curls, no notes." },
+            { x: 52, y: 63, label: "Long-sleeve maxi in charcoal." },
+            { x: 25, y: 30, label: "Location: the wavy mirror." }
+          ]
+        }
+      ],
+
+      // The 21 List. Edit freely: one line per year.
+      list21: [
+        "Born November 18, 2005. A Scorpio, obviously.",
+        "Udupi, then Dubai, then Pune. London is next.",
+        "Cali to most people. Calista on the cover.",
+        "Can turn any mirror into a magazine cover.",
+        "Black is her color. So is everything else.",
+        "Gold hoops and a full ear stack.",
+        "Can tuck a rose behind her ear and make it look normal.",
+        "The curls. No further questions.",
+        "Nails always done.",
+        "Has never once been underdressed.",
+        "Can make a cat-ear headband look like couture.",
+        "Favorite celebrity couple: A$AP and Rihanna.",
+        "Olivia Dean is always on her playlist.",
+        "Belgian Waffle Co. is a love language.",
+        "Gets genuinely excited about food. See page 16.",
+        "Wears her faith around her neck.",
+        "Her mirror says God's Masterpiece and Created Anew.",
+        "It also says Thrive in Adversity. She does.",
+        "Lights up a photo without trying.",
+        "Headed to London for her master's.",
+        "Twenty-one on November 18, 2026."
+      ],
+
+      // Horoscope
+      horoscope: {
+        intro: "Scorpio season opens on October 23. Some of us remember that date for other reasons.",
+        forecast: [
+          { title: "The year ahead", text: "Big moves. The stars point west, specifically London, and your master's is written all over your chart." },
+          { title: "Style", text: "Black remains undefeated. Gold hoops are not optional." },
+          { title: "Energy", text: "Magnetic, as usual. Expect people to keep asking where you got that." },
+          { title: "Advice", text: "Make the wish. Then make the plan." }
+        ],
+        lucky: [
+          { title: "Lucky number", text: "21" },
+          { title: "Lucky song", text: "Fashion Killa" },
+          { title: "Lucky snack", text: "Waffles" }
+        ]
       },
 
       offDuty: [
@@ -2228,6 +2648,96 @@
       cap.textContent = shot.caption;
       fig.appendChild(cap);
       duty.appendChild(fig);
+    });
+
+    // ---------- Style File ----------
+    const styleLooks = document.getElementById("style-looks");
+    CONFIG.styleFile.forEach(look => {
+      const fig = document.createElement("figure");
+      fig.className = "look-file";
+
+      const frame = document.createElement("div");
+      frame.className = "look-frame";
+      frame.appendChild(photoSlot(look.src, "Photo", look.name));
+
+      let openLabel = null;
+      look.spots.forEach(spot => {
+        const btn = document.createElement("button");
+        btn.className = "spot";
+        btn.textContent = "+";
+        btn.style.left = spot.x + "%";
+        btn.style.top = spot.y + "%";
+        btn.setAttribute("aria-expanded", "false");
+        btn.setAttribute("aria-label", spot.label);
+
+        btn.addEventListener("click", () => {
+          const wasOpen = btn.getAttribute("aria-expanded") === "true";
+          // only one label open at a time per look
+          frame.querySelectorAll(".spot").forEach(b => b.setAttribute("aria-expanded", "false"));
+          if (openLabel) { openLabel.remove(); openLabel = null; }
+          if (wasOpen) return;
+
+          btn.setAttribute("aria-expanded", "true");
+          const label = document.createElement("div");
+          // Dots on the right side open their label to the left, so it never runs off the photo
+          const flip = spot.x > 55;
+          const room = flip ? spot.x : 100 - spot.x;
+          label.className = flip ? "spot-label flip" : "spot-label";
+          if (flip) label.style.right = (100 - spot.x) + "%";
+          else label.style.left = spot.x + "%";
+          label.style.top = spot.y + "%";
+          label.style.maxWidth = `min(62%, calc(${room}% - 30px))`;
+          label.textContent = spot.label;
+          frame.appendChild(label);
+          openLabel = label;
+        });
+        frame.appendChild(btn);
+      });
+
+      const cap = document.createElement("figcaption");
+      cap.innerHTML = "<b></b><span></span>";
+      cap.querySelector("b").textContent = look.name;
+      cap.querySelector("span").textContent = look.title;
+
+      fig.append(frame, cap);
+      styleLooks.appendChild(fig);
+    });
+
+    // ---------- Passport: stamps land when the page comes into view ----------
+    const passportPage = document.getElementById("passport-page");
+    new IntersectionObserver((entries, obs) => {
+      if (entries[0].isIntersecting) {
+        passportPage.classList.add("stamped");
+        obs.disconnect();
+      }
+    }, { threshold: .3 }).observe(passportPage);
+
+    // ---------- The 21 List ----------
+    const list21 = document.getElementById("list21-items");
+    CONFIG.list21.forEach((item, n) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<span class="no">${pad(n + 1)}</span><span></span>`;
+      li.lastChild.textContent = item;
+      list21.appendChild(li);
+    });
+
+    // ---------- Horoscope ----------
+    document.getElementById("horo-intro").textContent = CONFIG.horoscope.intro;
+    const forecast = document.getElementById("horo-forecast");
+    CONFIG.horoscope.forecast.forEach(f => {
+      const dt = document.createElement("dt");
+      dt.textContent = f.title;
+      const dd = document.createElement("dd");
+      dd.textContent = f.text;
+      forecast.append(dt, dd);
+    });
+    const lucky = document.getElementById("horo-lucky");
+    CONFIG.horoscope.lucky.forEach(l => {
+      const div = document.createElement("div");
+      div.innerHTML = "<span></span><b></b>";
+      div.querySelector("span").textContent = l.title;
+      div.querySelector("b").textContent = l.text;
+      lucky.appendChild(div);
     });
 
     // ---------- Soundtrack ----------
