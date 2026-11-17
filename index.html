@@ -2458,13 +2458,15 @@
       // Style File: each look with tap-to-see labels. x, y are where the dot sits (% of the photo).
       styleFile: [
         {
-          src: "photos/flower.jpg",
+          src: "photos/sunset.jpg",
+          ratio: "742 / 735",
           title: "Detail 1",
-          name: "The eyes",
+          name: "The light",
           spots: [
-            { x: 58, y: 37, label: "Eyes like a galaxy." },
-            { x: 62, y: 53, label: "A smile that ends arguments." },
-            { x: 46, y: 18, label: "Smart. Effortlessly, annoyingly smart." }
+            { x: 30, y: 27, label: "Eyes like a galaxy. This sky is the closest thing to them." },
+            { x: 63, y: 67, label: "Walks into every new chapter like this." },
+            { x: 82, y: 55, label: "Steady, even when the tide isn't." },
+            { x: 25, y: 85, label: "Leaves a mark wherever she goes." }
           ]
         },
         {
@@ -2472,8 +2474,9 @@
           title: "Detail 2",
           name: "The grit",
           spots: [
-            { x: 52, y: 63, label: "Grit. The kind that doesn't need an audience." },
-            { x: 49, y: 43, label: "Beautiful, and somehow that's the least interesting thing about her." }
+            { x: 49, y: 43, label: "Smart. Effortlessly, annoyingly smart." },
+            { x: 52, y: 58, label: "Beautiful, and somehow that's the least interesting thing about her." },
+            { x: 52, y: 75, label: "Grit. The kind that doesn't need an audience." }
           ]
         },
         {
@@ -3248,6 +3251,7 @@
 
       const frame = document.createElement("div");
       frame.className = "look-frame";
+      if (look.ratio) frame.style.aspectRatio = look.ratio;
       frame.appendChild(photoSlot(look.src, "Photo", look.name));
 
       let openLabel = null;
