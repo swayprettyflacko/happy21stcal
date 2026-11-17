@@ -1956,6 +1956,124 @@
       }
     }
 
+    /* ---------- Advertisement ---------- */
+
+    .book > .ad {
+      background: #F6A8C8;
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .ad-frame {
+      position: relative;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .ad-photo {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 54% 50%;
+    }
+    .ad-frame::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, .28), transparent 20%, transparent 80%, rgba(246, 168, 200, .9));
+      pointer-events: none;
+    }
+    .ad-tag {
+      position: absolute;
+      top: calc(14px + env(safe-area-inset-top));
+      left: 0; right: 0;
+      z-index: 2;
+      margin: 0;
+      text-align: center;
+      font-stretch: 80%;
+      font-weight: 600;
+      font-size: .7rem;
+      color: rgba(255, 255, 255, .85);
+    }
+    .ad-copy {
+      flex: 0 0 auto;
+      padding: 18px 22px calc(88px + env(safe-area-inset-bottom));
+      color: var(--lacquer-deep);
+      text-align: center;
+    }
+    .ad-name {
+      margin: 0;
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(3.4rem, 18vw, 5rem);
+      line-height: .9;
+      letter-spacing: .02em;
+    }
+    .ad-line { margin: 8px 0 0; font-family: var(--serif); font-style: italic; font-size: 1.2rem; }
+    .ad-notes { margin: 12px 0 0; font-size: .9rem; }
+    .ad-small { margin: 4px 0 0; font-stretch: 80%; font-weight: 600; font-size: .75rem; opacity: .75; }
+
+    /* ---------- Running footer on every page ---------- */
+
+    .runfoot {
+      display: flex;
+      justify-content: space-between;
+      margin: 40px 0 0;
+      padding-top: 8px;
+      border-top: 1px solid var(--rule);
+      font-stretch: 80%;
+      font-weight: 600;
+      font-size: .72rem;
+      color: var(--grey);
+    }
+    .faith .runfoot { border-top-color: rgba(78, 7, 16, .25); color: var(--lacquer); }
+
+    /* ---------- Back cover ---------- */
+
+    .back-inner { width: 100%; max-width: 420px; margin: 0 auto; }
+    .back-logo {
+      font-family: var(--serif);
+      font-weight: 800;
+      font-size: 4.2rem;
+      line-height: .8;
+      letter-spacing: -.04em;
+    }
+    .back-cover .back-issue { font-family: var(--sans); font-style: normal; line-height: 1.3; margin: 8px 0 28px; font-stretch: 80%; font-weight: 600; font-size: .85rem; color: var(--blush); }
+    .colophon {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 6px 14px;
+      margin: 30px 0 22px;
+      padding: 14px 0;
+      border-top: 1px solid rgba(255, 255, 255, .3);
+      border-bottom: 1px solid rgba(255, 255, 255, .3);
+      text-align: left;
+      font-size: .82rem;
+    }
+    .colophon dt { color: var(--blush); font-stretch: 80%; font-weight: 600; }
+    .colophon dd { margin: 0; }
+    .back-barcode { display: block; width: 130px; height: 34px; margin: 0 auto; background: var(--paper); padding: 4px 6px; }
+
+    .pg-sound { font-size: 1.05rem; }
+    .pg-sound[aria-pressed="false"] { opacity: .4; text-decoration: line-through; }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .leaf.arrived .ad-photo { animation: ad-in 2.4s cubic-bezier(.2, .7, .2, 1) both; }
+      @keyframes ad-in { from { transform: scale(1.12); filter: brightness(1.4) saturate(.6); } to { transform: none; } }
+      .ad .ad-copy > * { opacity: 0; transform: translateY(12px); }
+      .leaf.arrived .ad-copy > * { animation: row-in .9s cubic-bezier(.2, .8, .2, 1) forwards; }
+      .leaf.arrived .ad-copy > :nth-child(1) { animation-delay: .8s; }
+      .leaf.arrived .ad-copy > :nth-child(2) { animation-delay: 1.2s; }
+      .leaf.arrived .ad-copy > :nth-child(3) { animation-delay: 1.6s; }
+      .leaf.arrived .ad-copy > :nth-child(4) { animation-delay: 1.8s; }
+      .back-cover .colophon, .back-cover .back-barcode, .back-cover .back-logo { opacity: 0; transition: opacity 1s ease; }
+      .back-cover.arrived .back-logo { opacity: 1; transition-delay: .1s; }
+      .back-cover.arrived .colophon { opacity: 1; transition-delay: 1.8s; }
+      .back-cover.arrived .back-barcode { opacity: 1; transition-delay: 2.3s; }
+    }
+
     /* ---------- Thoughtful moments ---------- */
 
     .tonearm {
@@ -2362,6 +2480,18 @@
     <div class="duty" id="duty"></div>
   </section>
 
+  <!-- Advertisement -->
+  <section class="ad leaf" id="ad" aria-label="Advertisement: No. 21, the fragrance">
+    <div class="ad-frame"><img class="ad-photo" src="photos/sunset.jpg" alt="Calista on the beach at sunset"></div>
+    <p class="ad-tag">Advertisement</p>
+    <div class="ad-copy">
+      <p class="ad-name">No. 21</p>
+      <p class="ad-line">The new fragrance by Calista Devona.</p>
+      <p class="ad-notes">Best worn over a spritz of Sì.</p>
+      <p class="ad-small">Available nowhere. Worn by one.</p>
+    </div>
+  </section>
+
   <!-- 21 Wishes -->
   <section class="page leaf" id="list21" aria-labelledby="list-title">
     <div class="folio"><span>21 Wishes</span><span>07</span></div>
@@ -2560,8 +2690,19 @@
   </section>
 
   <footer class="back-cover leaf">
-    <p id="back-line"></p>
-    <small id="back-small"></small>
+    <div class="back-inner">
+      <div class="back-logo">CALI</div>
+      <p class="back-issue">No. 21, November 2026</p>
+      <p id="back-line"></p>
+      <small id="back-small"></small>
+      <dl class="colophon">
+        <dt>Editor in chief</dt><dd>Sammy</dd>
+        <dt>Cover star</dt><dd>Calista Devona</dd>
+        <dt>Photography</dt><dd>Calista, mostly</dd>
+        <dt>Printed</dt><dd>For one reader, November 18, 2026</dd>
+      </dl>
+      <svg class="back-barcode" id="back-barcode" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true"></svg>
+    </div>
   </footer>
     <div class="turn-shade" id="turn-shade" aria-hidden="true"></div>
     <div class="page-edges" id="page-edges" aria-hidden="true"></div>
@@ -2572,6 +2713,7 @@
     <button class="pg-btn" id="pg-prev" aria-label="Previous page">&lsaquo;</button>
     <span class="pg-label" id="pg-label" aria-live="polite"></span>
     <button class="pg-btn" id="pg-next" aria-label="Next page">&rsaquo;</button>
+    <button class="pg-btn pg-sound" id="pg-sound" aria-label="Page sounds on" aria-pressed="true">&#9835;</button>
   </nav>
   <div class="swipe-hint" id="swipe-hint" aria-hidden="true">Swipe to turn the page <span>&rarr;</span></div>
 
@@ -2694,15 +2836,14 @@
       // Style File: each look with tap-to-see labels. x, y are where the dot sits (% of the photo).
       styleFile: [
         {
-          src: "photos/sunset.jpg",
-          ratio: "742 / 735",
+          src: "photos/pink-ad.jpg",
+          ratio: "4 / 5",
           title: "Detail 1",
-          name: "The light",
+          name: "The eyes",
           spots: [
-            { x: 30, y: 27, label: "Eyes like a galaxy. This sky is the closest thing to them." },
-            { x: 63, y: 67, label: "Walks into every new chapter like this." },
-            { x: 82, y: 55, label: "Steady, even when the tide isn't." },
-            { x: 25, y: 85, label: "Leaves a mark wherever she goes." }
+            { x: 52, y: 25, label: "Eyes like a galaxy." },
+            { x: 70, y: 43, label: "A pout that wins every argument." },
+            { x: 48, y: 69, label: "Faith, worn close." }
           ]
         },
         {
@@ -3680,6 +3821,51 @@
     const shade = document.getElementById("turn-shade");
     const edges = document.getElementById("page-edges");
 
+    // ---------- Page-turn sound: a short paper rustle made on the fly ----------
+    let audioCtx = null;
+    let soundOn = true;
+    try { soundOn = localStorage.getItem("cali-sound") !== "off"; } catch (e) {}
+    const soundBtn = document.getElementById("pg-sound");
+    function syncSoundBtn() {
+      soundBtn.setAttribute("aria-pressed", String(soundOn));
+      soundBtn.setAttribute("aria-label", soundOn ? "Page sounds on" : "Page sounds off");
+    }
+    syncSoundBtn();
+    soundBtn.addEventListener("click", () => {
+      soundOn = !soundOn;
+      syncSoundBtn();
+      try { localStorage.setItem("cali-sound", soundOn ? "on" : "off"); } catch (e) {}
+    });
+    // phones only allow sound after a tap, so wake the audio on the first one
+    document.addEventListener("pointerdown", () => {
+      if (!audioCtx) {
+        try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
+      }
+      if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+    }, { passive: true });
+
+    function rustle() {
+      if (!soundOn || !audioCtx || audioCtx.state !== "running") return;
+      const len = .32;
+      const now = audioCtx.currentTime;
+      const buffer = audioCtx.createBuffer(1, Math.floor(audioCtx.sampleRate * len), audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * (Math.random() < .08 ? 1 : .35);
+      const src = audioCtx.createBufferSource();
+      src.buffer = buffer;
+      const band = audioCtx.createBiquadFilter();
+      band.type = "bandpass";
+      band.Q.value = .9;
+      band.frequency.setValueAtTime(1800, now);
+      band.frequency.exponentialRampToValueAtTime(4200, now + len);
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(.16, now + .05);
+      gain.gain.exponentialRampToValueAtTime(.001, now + len);
+      src.connect(band).connect(gain).connect(audioCtx.destination);
+      src.start(now);
+    }
+
     // Shadow cast by the turning page: edge runs from the right (100%) to the spine (0%)
     function setShade(edgePct, visible, ms) {
       shade.style.zIndex = leaves.length * 3 - 1;
@@ -3692,6 +3878,7 @@
     const pageName = leaf => {
       if (leaf.classList.contains("cover")) return "Cover";
       if (leaf.classList.contains("back-cover")) return "Back cover";
+      if (leaf.classList.contains("ad")) return "Advertisement";
       if (leaf.id === "archive") return "The Archive";
       const folio = leaf.querySelector(".folio span");
       return folio ? folio.textContent : "";
@@ -3699,7 +3886,16 @@
     leaves.forEach((leaf, i) => {
       const num = leaf.querySelector(".folio span:last-child");
       if (num) num.textContent = pad(i + 1);
+      // running footer, like a printed issue
+      if (leaf.querySelector(".folio")) {
+        const foot = document.createElement("div");
+        foot.className = "runfoot";
+        foot.innerHTML = `<span>CALI</span><span>November 2026</span><span>${pad(i + 1)}</span>`;
+        (leaf.querySelector(":scope > .page") || leaf).appendChild(foot);
+      }
     });
+    // the back cover gets the same barcode as the front
+    document.getElementById("back-barcode").innerHTML = document.getElementById("barcode").innerHTML;
     document.querySelectorAll(".contents-list a").forEach(a => {
       const i = leaves.findIndex(l => l.id === a.getAttribute("href").slice(1));
       if (i >= 0) a.querySelector(".pg").textContent = pad(i + 1);
@@ -3750,6 +3946,7 @@
       leaf.style.transition = `transform ${ms}ms cubic-bezier(.35, .6, .2, 1), filter ${ms}ms ease`;
       under.style.transition = `filter ${ms}ms ease`;
       if (!calmPages) setShade(dir > 0 ? 100 : 0, true, 0);
+      if (duration >= 500) rustle();
       requestAnimationFrame(() => {
         if (!calmPages) setShade(dir > 0 ? 0 : 100, true, ms);
         leaf.style.transform = dir > 0 ? "rotateY(-180deg)" : "rotateY(0deg)";
@@ -3860,6 +4057,7 @@
         setTimeout(() => {
           turning = false;
           if (complete) current += dir;
+          if (complete) rustle();
           layout();
         }, ms + 30);
       }
